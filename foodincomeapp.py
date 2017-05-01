@@ -4,12 +4,12 @@ from bokeh.plotting import figure, output_file, show
 import pandas as pd
 import numpy as np
 
-foodincome = Flask(__name__)
+foodincomeapp = Flask(__name__)
 
-foodincome.vars={}
+foodincomeapp.vars={}
 
-@foodincome.route('/index', methods = ['GET'])
-def main():
+@foodincomeapp.route('/index', methods = ['GET'])
+def foodincomeapp():
     traveltime = np.loadtxt('data/traveltime.txt')
     foodincome = pd.read_csv('data/foodincome.csv')
     
@@ -25,4 +25,4 @@ def main():
 
     
 if __name__ == '__main__':
-    foodincome.run(port=33507)
+    foodincomeapp.run(port=33507)

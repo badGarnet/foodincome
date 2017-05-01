@@ -22,7 +22,7 @@ def main_app():
                x_axis_label='total income in a zip code area (USD)',
                y_axis_label='number of restaurants',
                x_axis_type="log", x_range=[10**7, 10**11])
-    p.scatter(foodincome.fillna(foodincome.sumincome.mean()), 
+    p.scatter(foodincome['sumincome'].fillna(foodincome.sumincome.mean()), 
               foodincome.foodsize, size=sizes, 
               fill_color=cpal, line_color=None)
     
@@ -35,7 +35,7 @@ def tnorm_app():
     foodincome = pd.read_csv('data/foodincome.csv')
     
     wt = np.exp(-(traveltime+traveltime.T)/2000)
-    timeincome = np.dot((foodincome.fillna(foodincome.sumincome.mean())).sumincome, wt)
+    timeincome = np.dot((foodincome['sumincome'].fillna(foodincome.sumincome.mean())), wt)
     cuisines = foodincome.max_cuisine_description.unique()
     cuisinemap = np.random.choice(range(0,256), cuisines.size).tolist()
     cpal = np.array(Plasma256)[cuisinemap]

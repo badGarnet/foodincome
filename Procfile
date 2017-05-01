@@ -1,1 +1,1 @@
-web: gunicorn foodincomeapp
+web: gunicorn wsgi

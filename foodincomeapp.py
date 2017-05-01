@@ -9,7 +9,7 @@ foodincomeapp = Flask(__name__)
 foodincomeapp.vars={}
 
 @foodincomeapp.route('/index', methods = ['GET'])
-def foodincomeapp():
+def main():
     traveltime = np.loadtxt('data/traveltime.txt')
     foodincome = pd.read_csv('data/foodincome.csv')
     

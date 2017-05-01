@@ -24,5 +24,5 @@ def main_app():
     return render_template('graph.html', script=script, div=div)
 
     
-if __name__ == '__main__':
+if __name__ == "__main__":
     foodincomeapp.run(port=33507)

@@ -25,4 +25,4 @@ def main():
 
     
 if __name__ == '__main__':
-    app_foodincome.run(debug = True)
+    app_foodincome.run(port=33507)

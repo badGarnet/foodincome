@@ -1,0 +1,5 @@
+bokeh==0.12.4
+conda==4.3.14
+Flask==0.12
+numpy==1.11.3
+pandas==0.19.2

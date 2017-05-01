@@ -1,0 +1,15 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="http://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css" type="text/css" />
+    <script type="text/javascript" src="http://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.js"></script>
+    {{ script | safe }}
+  </head>
+  <body>
+    <div class=page>
+      <h1>Restaurant count vs. income in NYC</h1>
+	  <p> The plot below shows a simple relationship between the number of restautrants and the total income of a zipcoded area in NYC. 
+	  </p>
+      {{ div | safe }}
+    </div>
+  </body>
+</html>

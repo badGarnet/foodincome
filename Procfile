@@ -1,1 +1,1 @@
-web: gunicorn foodincomeapp:main_app
+web: gunicorn foodincomeapp

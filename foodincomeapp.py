@@ -54,4 +54,4 @@ def tnorm_app():
 
     
 if __name__ == "__main__":
-    foodincomeapp.run(port=5000)
+    foodincomeapp.run(port=33507)

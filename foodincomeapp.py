@@ -94,35 +94,74 @@ def getmapplot(cord, rate, maptitle, htext):
     ]
     return p
 
-@foodincomeapp.route('/seattle', methods = ['GET'])
-def seattle_app():
-    traveltime = np.loadtxt('data/sea_ttime.txt')
-    foodincome = pd.read_csv('data/sea_foodincomezip.csv')
-    with open('data/seazip_cord', 'r') as f:
-        try:
-            sea_cord = json.load(f)
-        except ValueError:
-            sea_cord = {}
-    
-    wt = np.exp(-traveltime/500)
-    rdtest = np.random.uniform(0, 1, wt.shape[0])
-    timeincome = np.dot(foodincome['sumincome'], wt)
-    timefoodsize = np.dot(foodincome['foodsize'], wt)
-    timerd = np.dot(rdtest, wt)
+def assembledisplay(ttime, df, t0, zipxy, cname):
+    """calculate time weighted features"""
+    wt = np.exp(-ttime/t0)
+    timeincome = np.dot(df['sumincome'], wt)
+    timefoodsize = np.dot(df['foodsize'], wt)
+    timepop = np.dot(df['sumpop'], wt)
 
-    p1 = getmapplot(sea_cord, foodincome.sumincome, 'income', 'income')
-    p2 = getmapplot(sea_cord, timeincome, 'accessible income', 'accessible income')
-    p3 = getmapplot(sea_cord, foodincome.foodsize, 'number of restaurants', '# restaurants')
-    tab1 = Panel(child=p1, title='income')
-    tab2 = Panel(child=p2, title='accessible income')
-    tab3 = Panel(child=p3, title='current restaurant density')
+    """assembling plots for tabbed view"""
+    p1 = getmapplot(zipxy, df.foodsize, cname+' number of restaurants', '# restaurants')
+
+    p21 = getmapplot(zipxy, df.sumincome, cname+' income', 'income')
+    p22 = getmapplot(zipxy, df.sumpop, cname+' number of households', '# household')
+    h2 = hplot(p21, p22)
+
+    p31 = getmapplot(zipxy, timeincome, cname+' accessible income', 'income')
+    p32 = getmapplot(zipxy, timepop, cname+' assessible households', '# households')
+    h3 = hplot(p31, p32)
+
+    tab1 = Panel(child=p1, title='current restaurant density')
+    tab2 = Panel(child=h2, title='income/household count')
+    tab3 = Panel(child=h3, title='accessible income/household count')
 
     tabs = Tabs(tabs=[tab1, tab2, tab3])
     script, div = components(tabs)
+    return script, div
+
+@foodincomeapp.route('/seattle', methods = ['GET'])
+def seattle_app():
+    traveltime = np.loadtxt('data/ttime_sea.txt')
+    foodincome = pd.read_csv('data/df_sea.csv')
+    with open('data/seazip_cord.json', 'r') as f:
+        try:
+            cords = json.load(f)
+        except ValueError:
+            cords = {}
+
+    script, div = assembledisplay(traveltime, foodincome, 500, cords, 'Seattle')
 
     return render_template('graph_seattle.html', script=script, div=div)
 
+@foodincomeapp.route('/nyc', methods = ['GET'])
+def nyc_app():
+    traveltime = np.loadtxt('data/ttime_nyc.txt')
+    foodincome = pd.read_csv('data/df_nyc.csv')
+    with open('data/nyczip_cord.json', 'r') as f:
+        try:
+            cords = json.load(f)
+        except ValueError:
+            cords = {}
 
-    
+    script, div = assembledisplay(traveltime, foodincome, 500, cords, 'NYC')
+
+    return render_template('graph_nyc.html', script=script, div=div)
+
+@foodincomeapp.route('/houston', methods = ['GET'])
+def houston_app():
+    traveltime = np.loadtxt('data/ttime_hou.txt')
+    foodincome = pd.read_csv('data/df_hou.csv')
+    with open('data/houzip_cord.json', 'r') as f:
+        try:
+            cords = json.load(f)
+        except ValueError:
+            cords = {}
+
+    script, div = assembledisplay(traveltime, foodincome, 500, cords, 'Houston')
+
+    return render_template('graph_houston.html', script=script, div=div)
+
+
 if __name__ == "__main__":
     foodincomeapp.run(port=33507)

@@ -1,0 +1,32 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css" type="text/css" />
+    <link
+    href="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.css"
+    rel="stylesheet" type="text/css">
+
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.js"></script>
+    <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.js"></script>
+
+    {{ script | safe }}
+
+  </head>
+  <body>
+    <div class=page>
+      <h1>distribution of restaurants and income in New York City, NY</h1>
+	  <p> 
+	  	NYC is different. Its local attractions, like Broadway greatly skews the placement of 
+		restaurants. Moreover, lots of new yorkers don't drive/take a car to travel across town.
+		Instead they use subway. Therefore, the method of weighting income and household number
+		by driving distance doesn't work so well in New York.
+	  </p> 
+	  <p>
+	  	With that said, the accessible income map does reveal the west bank of Queens/Brooklyn
+		can potentially attract relatively high revenue while the local income of those places are
+		not purticularly high. The high number of restaurants in those neighborhoods (shown in
+		the current restaurant density map) agrees with the finding from the accessible income map.
+	  </p>
+    </div>
+    {{ div | safe }}
+  </body>
+</html>

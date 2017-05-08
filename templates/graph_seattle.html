@@ -1,0 +1,35 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.css" type="text/css" />
+    <link
+    href="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.css"
+    rel="stylesheet" type="text/css">
+
+    <script type="text/javascript" src="https://cdn.pydata.org/bokeh/release/bokeh-0.12.4.min.js"></script>
+    <script src="http://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.js"></script>
+
+    {{ script | safe }}
+
+  </head>
+  <body>
+    <div class=page>
+      <h1>distribution of restaurants and income in Seattle, WA</h1>
+	  <p> 
+          The maps below shows how local income does not necessarily determine the number of restaurants
+          in an area. For example zip code 98038 (south east of city) is one of the highest 
+          income areas (yellow color on income map), but it does not have a high restaurant density.
+	  </p> 
+	  <p>
+          The accessible income evaluates the potential contribution from all over the city,
+          instead of just the local zip code alone. As a result, places within easy reach to 
+          medium and high income areas in the city has high accessible income. Those areas also 
+          seem to have more restaurants.
+	  </p>
+      <p>
+          The accessible income map shows there could be untapped potential in the east of the city
+          where there is high accessible income but not that many restaurants.
+      </p>
+    </div>
+    {{ div | safe }}
+  </body>
+</html>

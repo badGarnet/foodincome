@@ -132,6 +132,35 @@ def assembledisplay(ttime, df, t0, zipxy, cname):
     script, div = components(tabs)
     return script, div
 
+def getcorr_t0(t0, df, ttime):
+    corrs = np.zeros(shape=(t0.size, 2))
+    i = 0
+    for a in t0:
+        wt = np.exp(-ttime/a)
+        # wt[wt<0.1]=0.1
+        timeincome = np.dot(df.sumincome, wt)
+        timefoodzie = np.dot(df.foodsize, wt)
+        rdtest = np.random.uniform(0,1,wt.shape[0])
+        unitest = np.ones(shape=(rdtest.shape))
+        timeuni = np.dot(unitest, wt)
+        timerd = np.dot(rdtest, wt)
+        corrs[i, 0] = np.corrcoef(timeincome, df.foodsize)[0, 1]
+        corrs[i, 1] = np.corrcoef(timeuni, df.foodsize)[0, 1]
+        i += 1
+    p = figure(x_axis_label='t0 (s)', y_axis_label='Pearson correlation coefficient',\
+                x_axis_type='log')
+    p.scatter(t0, corrs[:,0], fill_color='Blue', line_color='Blue', \
+                    legend='accessible income vs. restaurant count')
+    p.line(t0, corrs[:,0], color='Blue')
+    p.scatter(t0, corrs[:,1], fill_color='Red', line_color='Red', \
+                    legend='accessibility vs. restaurant count')
+    p.line(t0, corrs[:,1], color='Red')
+    cc = np.corrcoef(df.sumincome, df.foodsize)[0,1]
+    p.line(t0, cc*np.ones(shape=corrs[:,1].shape), color='Black', \
+                    legend='local income vs. restaurant count')
+    script, div = components(p)
+    return script, div
+
 @foodincomeapp.route('/seattle', methods = ['GET'])
 def seattle_app():
     traveltime = np.loadtxt('data/ttime_sea.txt')
@@ -172,11 +201,20 @@ def houston_app():
 
     script, div = assembledisplay(traveltime, foodincome, 420, cords, 'Houston')
 
-    p = getmapplot(cords, np.exp(-traveltime/420)[:,0], 'weights', 'weights')
-    script2, div2 = components(p)
+    p1 = getmapplot(cords, np.exp(-traveltime/420)[:,0], 'weights', 'weights')
+    timeuni = np.dot(np.ones(shape=(1, traveltime.shape[0])), \
+                    np.exp(-traveltime/420))
+    p2 = getmapplot(cords, timeuni, 'Accessibility: sum of weights', 'accessibility')
+    tab1 = Panel(child=p1, title='Weights for city center')
+    tab2 = Panel(child=p2, title='Accessibility map')
+    tabs = Tabs(tabs=[tab1, tab2])
+    script2, div2 = components(tabs)
+
+    script3, div3 = getcorr_t0(np.arange(60, 6060, 60), foodincome, traveltime)
 
     return render_template('graph_houston.html', script=script, div=div, \
-                            script2=script2, div2=div2)
+                            script2=script2, div2=div2, \
+                            script3=script3, div3=div3)
 
 
 if __name__ == "__main__":

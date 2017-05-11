@@ -10,6 +10,7 @@
 
     {{ script | safe }}
     {{ script2 | safe }}
+    {{ script3 | safe }}
 
   </head>
   <body>
@@ -26,18 +27,59 @@
     income and accessible income. Notice how the distribution of accessible income correlats 
     much better to distribution of the restaurants.
 	  </p> 
+    <p>
+        One way to understand accessible income is to compare the local income map with the
+        accessible income map. The difference between those two is traveling, or accessiblity. 
+        For example, even though the area directly west of downtown is not a particularly high income
+        area it has easy asscess to a few closeby hig income neighborhoods. As a result, this
+        area has a high accessible income. Conveniently, this area also contain a relatively high
+        number of restaurants. 
+    </p>
     {{ div | safe }}
     <p></p>
-      <h1>What is accessible income? </h1>
+      <h1>How to calculate accessible income? </h1>
       <p>
         Accessible income is the sum of income from all places in a city, each weighted by 
         the travel time. For example, the accessible income for the city center is the income
         from city center itself plus income from all other parts of the city, weighted by the 
-        travel time from those parts to the city center. Those closer to city center have 
+        travel time from those parts to the city center. Income closer to the city center have 
         larger weights (closer to 1) and incomes from the outer rim of a city have small weights,
-        like the map below shows.
+        like the map below shows. The map visualizes the degree of contribution from other parts
+        of the city to the city center. 
+      </p>
+        Summing up products between this contribution factor and
+         income from each part of the city we obtain the accessible income for the city center. We
+        can also sum up just the weights together and call the new feature the accessibility. 
+        A place has a higher accessibility when it is easier to travel to that place from all over
+        the city. Intuitively the city center and places along highways have high accessibility,
+        like the map in the second tab below shows.
+      <p>
+        
       </p>
       {{ div2 | safe }}
+
+      <h1>More analysis</h1>
+      <p>
+        The weight is calculated as w=exp(-t/t0), where t is the travel time and t0 is a model
+        parameter, reprsents the travel time when the weigh is exactly exp(-1)=0.37. When t0=0, 
+        only local income can contribute to the accessible income of an area since w=0 for t>0.
+        In this case, the accessible income is the local income. When t0 is very large, w can be 
+        close to 1 for any travel time between two points in a city. This results in all areas
+        having the same accessible income: the total income of the city. In general, a smaller t0
+        means people are less likely to travel for places outside of their neighborhood. A carefully
+        chosen t0 can capture people's tolerance of traveling (when seeking restaurants). We can 
+        choose the t0 that maximizes the correlation between accessible income and restaurant count.
+      </p>
+      <p>
+        The plot suggests a t0 between 360s and 420s is can maximize the correlation between
+        accessible income and restaurant count to above 0.65. The correlation between local income
+        and restaurant count is only 0.36, suggesting the accessible income is a much better
+        predictor for where restaurants concentrates. We can also see that accessibility alone
+        can even provide a better correlation to the restaurant count than local income, suggesting 
+        that the ease to access may even outweight the local factors!
+      </p>
+      {{ div3 | safe }}
+
     </div>
   </body>
 </html>

@@ -9,21 +9,35 @@
     <script src="https://cdn.pydata.org/bokeh/release/bokeh-widgets-0.12.4.min.js"></script>
 
     {{ script | safe }}
+    {{ script2 | safe }}
 
   </head>
   <body>
-    <div class=page>
-      <h1>distribution of restaurants and income in Houston, TX</h1>
+    <div>
+      <h1>Where are the restaurants in Houston, TX</h1>
 	  <p> 
 	  	Houston is a city on the wheel! Restaurants in Houston concentrate at places where
-		people can easily reach with driving. The accessible income map shows the region west of
-		downtown can reach the highest amout of income from the whole city by car. This region also
-		has the highest concentration of restaurants in the city.
+		people can easily reach with driving. Local income only has limited inflence on the
+    distribution of restaurants in town. With apps like Yelp and Uber, people are willing
+    to travel across town for a good bite. So we need to consider income from the whole city.
+    Moreover, travel time can be an important factor because usually people don't want to 
+    go too far to eat. We can combine income and travel time to create a new feature called
+    accessible income. Toggle between the two sets of maps below to see the differences between
+    income and accessible income. Notice how the distribution of accessible income correlats 
+    much better to distribution of the restaurants.
 	  </p> 
-	  	The accessible income map suggest.
-	  <p>
-	  </p>
-    </div>
     {{ div | safe }}
+    <p></p>
+      <h1>What is accessible income? </h1>
+      <p>
+        Accessible income is the sum of income from all places in a city, each weighted by 
+        the travel time. For example, the accessible income for the city center is the income
+        from city center itself plus income from all other parts of the city, weighted by the 
+        travel time from those parts to the city center. Those closer to city center have 
+        larger weights (closer to 1) and incomes from the outer rim of a city have small weights,
+        like the map below shows.
+      </p>
+      {{ div2 | safe }}
+    </div>
   </body>
 </html>

@@ -1,8 +1,8 @@
 from flask import Flask, render_template, request, redirect
 from bokeh.embed import components
 from bokeh.plotting import figure, output_file, show
-from bokeh.palettes import Viridis6 as palette
-from bokeh.io import hplot
+from bokeh.palettes import Viridis11 as palette
+from bokeh.layouts import row
 from bokeh.io import show
 from bokeh.models import (
     ColumnDataSource,
@@ -17,6 +17,10 @@ import json
 foodincomeapp = Flask(__name__)
 
 foodincomeapp.vars={}
+
+@foodincomeapp.route('/', methods = ['GET'])
+def index_app():
+    return redirect('/houston')
 
 def getcolors(s):
     cuisines = s.unique()
@@ -38,7 +42,8 @@ def main_app():
     p.scatter(foodincome['sumincome'],foodincome.foodsize, size=sizes, line_color=None)
     
     script, div = components(p)
-    return render_template('graph_raw.html', script=script, div=div)
+    # return render_template('graph_raw.html', script=script, div=div)
+    return redirect('/nyc')
 
 @foodincomeapp.route('/foodincomenyc_tnorm', methods = ['GET'])
 def tnorm_app():
@@ -63,10 +68,11 @@ def tnorm_app():
                y_axis_label='traivel time weighted accessible number of restaurants')
     p2.scatter(timerd, timefoodsize, size=sizes, line_color=None)
 
-    hp = hplot(p1, p2)
+    hp = row(p1, p2)
 
     script, div = components(hp)
-    return render_template('graph_tnorm.html', script=script, div=div)
+    # return render_template('graph_tnorm.html', script=script, div=div)
+    return redirect('/nyc')
 
 def getmapplot(cord, rate, maptitle, htext):
     source = ColumnDataSource(data=dict(
@@ -102,19 +108,25 @@ def assembledisplay(ttime, df, t0, zipxy, cname):
     timepop = np.dot(df['sumpop'], wt)
 
     """assembling plots for tabbed view"""
-    p1 = getmapplot(zipxy, df.foodsize, cname+' number of restaurants', '# restaurants')
+    p11 = getmapplot(zipxy, df.foodsize, cname+' number of restaurants', '# restaurants')
+    p12 = getmapplot(zipxy, df.sumincome, cname+' income', 'income')
+    # p22 = getmapplot(zipxy, df.sumpop, cname+' number of households', '# household')
+    h1 = row(p11, p12)
 
-    p21 = getmapplot(zipxy, df.sumincome, cname+' income', 'income')
-    p22 = getmapplot(zipxy, df.sumpop, cname+' number of households', '# household')
-    h2 = hplot(p21, p22)
+    p21 = getmapplot(zipxy, df.foodsize, cname+' number of restaurants', '# restaurants')
+    p22 = getmapplot(zipxy, timeincome, cname+' accessible income', 'income')
+    #p32 = getmapplot(zipxy, timepop, cname+' assessible households', '# households')
+    h2 = row(p21, p22)
 
-    p31 = getmapplot(zipxy, timeincome, cname+' accessible income', 'income')
-    p32 = getmapplot(zipxy, timepop, cname+' assessible households', '# households')
-    h3 = hplot(p31, p32)
+    p31 = figure(x_axis_label='income', y_axis_label='restaurant count')
+    p31.circle(df.sumincome, df.foodsize)
+    p32 = figure(x_axis_label='accessible income', y_axis_label='restaurant count')
+    p32.circle(timeincome, df.foodsize)
+    h3 = row(p31, p32)
 
-    tab1 = Panel(child=p1, title='current restaurant density')
-    tab2 = Panel(child=h2, title='income/household count')
-    tab3 = Panel(child=h3, title='accessible income/household count')
+    tab1 = Panel(child=h1, title='local income')
+    tab2 = Panel(child=h2, title='accessible income')
+    tab3 = Panel(child=h3, title='correlations')
 
     tabs = Tabs(tabs=[tab1, tab2, tab3])
     script, div = components(tabs)
@@ -158,9 +170,13 @@ def houston_app():
         except ValueError:
             cords = {}
 
-    script, div = assembledisplay(traveltime, foodincome, 500, cords, 'Houston')
+    script, div = assembledisplay(traveltime, foodincome, 420, cords, 'Houston')
 
-    return render_template('graph_houston.html', script=script, div=div)
+    p = getmapplot(cords, np.exp(-traveltime/420)[:,0], 'weights', 'weights')
+    script2, div2 = components(p)
+
+    return render_template('graph_houston.html', script=script, div=div, \
+                            script2=script2, div2=div2)
 
 
 if __name__ == "__main__":

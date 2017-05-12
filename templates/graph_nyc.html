@@ -10,23 +10,26 @@
 
     {{ script | safe }}
 
+    {{ script2 | safe }}
+
   </head>
   <body>
     <div class=page>
-      <h1>distribution of restaurants and income in New York City, NY</h1>
+      <h1>Distribution of restaurants in New York City, NY</h1>
 	  <p> 
-	  	NYC is different. Its local attractions, like Broadway greatly skews the placement of 
-		restaurants. Moreover, lots of new yorkers don't drive/take a car to travel across town.
-		Instead they use subway. Therefore, the method of weighting income and household number
-		by driving distance doesn't work so well in New York.
+	  	NYC is different from <A HREF='houston'> Houston, TX</A>. Its local attractions, like Broadway, 
+      greatly skews the distribution of 
+		restaurants. Moreover, lots of New Yorkers don't drive/take a car to travel across town.
+		Instead, they use subway. Therefore, the method of weighting income and household number
+		by driving distance may not work so well in New York.
 	  </p> 
 	  <p>
-	  	With that said, the accessible income map does reveal the west bank of Queens/Brooklyn
-		can potentially attract relatively high revenue while the local income of those places are
-		not purticularly high. The high number of restaurants in those neighborhoods (shown in
-		the current restaurant density map) agrees with the finding from the accessible income map.
+      In fact, the logarithmic values for local income and restaurant count have a correlation
+      coefficient (scroll down for it)! It could suggest restaurants in NYC is mainly driven by local customers. 
 	  </p>
-    </div>
     {{ div | safe }}
+    <p>Potential power-law relationship between local income and restaurant count in NYC.</p>
+    {{ div2 | safe }}
+    </div>
   </body>
 </html>

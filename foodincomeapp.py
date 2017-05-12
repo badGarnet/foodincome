@@ -100,6 +100,24 @@ def getmapplot(cord, rate, maptitle, htext):
     ]
     return p
 
+def getdotplot(x, y, hdata, xname, yname, hname, xtype, ytype):
+    source = ColumnDataSource(data=dict(
+        x = x, y = y, hdata = hdata,
+    ))
+    TOOLS = "pan,wheel_zoom,reset,hover,save"
+    p = figure(x_axis_label=xname, y_axis_label=yname, tools=TOOLS,\
+                x_axis_type=xtype, y_axis_type=ytype)
+
+    p.scatter('x', 'y', size=10, line_color='Black', source=source)
+
+    hover = p.select_one(HoverTool)
+    hover.point_policy = "follow_mouse"
+    hover.tooltips = [
+        (hname, "@hdata"),
+    ]
+    return p
+
+
 def assembledisplay(ttime, df, t0, zipxy, cname):
     """calculate time weighted features"""
     wt = np.exp(-ttime/t0)
@@ -118,10 +136,14 @@ def assembledisplay(ttime, df, t0, zipxy, cname):
     #p32 = getmapplot(zipxy, timepop, cname+' assessible households', '# households')
     h2 = row(p21, p22)
 
-    p31 = figure(x_axis_label='income', y_axis_label='restaurant count')
-    p31.circle(df.sumincome, df.foodsize)
-    p32 = figure(x_axis_label='accessible income', y_axis_label='restaurant count')
-    p32.circle(timeincome, df.foodsize)
+    # p31 = figure(x_axis_label='income', y_axis_label='restaurant count')
+    # p31.circle(df.sumincome, df.foodsize)
+    p31 = getdotplot(df.sumincome, df.foodsize, df['zip code'], \
+                    'income (USD)', 'restaurant count', 'zip code', \
+                     'linear', 'linear')
+    p32 = getdotplot(timeincome, df.foodsize, df['zip code'], \
+                    'accessible income (USD)', 'restaurant count', 'zip code', \
+                     'linear', 'linear')
     h3 = row(p31, p32)
 
     tab1 = Panel(child=h1, title='local income')
@@ -187,7 +209,13 @@ def nyc_app():
 
     script, div = assembledisplay(traveltime, foodincome, 500, cords, 'NYC')
 
-    return render_template('graph_nyc.html', script=script, div=div)
+    p = getdotplot(foodincome.sumincome, foodincome.foodsize, foodincome['zip code'], \
+                    'income (USD)', 'restaurant count', 'zip code',
+                    'log', 'log')
+    script2, div2 = components(p)
+
+    return render_template('graph_nyc.html', script=script, div=div, \
+                            script2=script2, div2=div2)
 
 @foodincomeapp.route('/houston', methods = ['GET'])
 def houston_app():

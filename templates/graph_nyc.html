@@ -30,6 +30,21 @@
     {{ div | safe }}
     <p>Potential power-law relationship between local income and restaurant count in NYC.</p>
     {{ div2 | safe }}
+
+
+    <ul>
+        <li>Restaurant information: <a href='https://data.cityofnewyork.us/resource/9w7m-hzhe.json'>
+          New York City restaurant inspection record (API)</a>.</li>
+        <li>Income: <a href='https://www.irs.gov/uac/soi-tax-stats-individual-income-tax-statistics-zip-code-data-soi'>
+          IRS individual income tax return record</a>.</li>
+        <li>Geodata: <a href='https://www.census.gov/geo/maps-data/data/cbf/cbf_zcta.html'>
+          Zip code shapefile</a> and 
+          <a href='https://www.census.gov/geo/maps-data/data/gazetteer2016.html'> 
+          zip code lat/lon cordinates </a></li>
+        <li>Travel time matrix: <a href='https://github.com/Project-OSRM/osrm-backend/blob/master/docs/http.md'>
+          OSRM backend API</a> (hosted locally) and
+          openstreetmap data downloaded from <a href='http://download.geofabrik.de/'>Geofabrik</a>.</li>
+      </ul>
     </div>
   </body>
 </html>

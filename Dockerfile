@@ -5,5 +5,5 @@ WORKDIR /code
 ADD . /code/
 RUN pip install -r requirements.txt
 
-EXPOSE 33507
+EXPOSE 5000
 CMD ["python", "/code/foodincomeapp.py"]
